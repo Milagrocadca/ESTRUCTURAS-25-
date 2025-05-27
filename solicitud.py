@@ -23,7 +23,7 @@ class Solicitud:
                 f"Peso={self.peso} kg, "
                 f"{self.origen} → {self.destino})")
 
-    def dic_solicitud(self):
+    def dic_solicitud(self): #STR??
        
         return {
             "id": self.id_carga,
