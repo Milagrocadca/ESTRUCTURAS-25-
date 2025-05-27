@@ -2,29 +2,31 @@ import csv
 from validaciones import *
 
 class Solicitud:
-    def __init__(self, idSolicitud:str, peso:float, origen:str, destino:str):
-        if idSolicitud in Solicitud.dic_solicitud.id:
+    ids_usados=set()
+    
+    def __init__(self, id_carga:str, peso:float, origen:str, destino:str):
+        if id_carga in Solicitud.ids_cargas:
             raise ValueError('Ya una solicitud con ese ID')
         
         elif not validarPositivo(peso):
             raise ValueError ("El peso del vehiculo ingresado no se encentra dentro de las opciones disponibles")
 
-        self.idSolicitud = str(idSolicitud)
+        self.id_carga = str(id_carga)
         self.peso = float(peso)
         self.origen = origen
         self.destino = destino
 
-    
+        Solicitud.ids_usados.add(id_carga)
 
     def __repr__(self):
-        return (f"Solicitud(ID={self.idSolicitud}, "
+        return (f"Solicitud(ID={self.id_carga}, "
                 f"Peso={self.peso} kg, "
                 f"{self.origen} → {self.destino})")
 
     def dic_solicitud(self):
        
         return {
-            "id": self.idSolicitud,
+            "id": self.id_carga,
             "peso": self.peso,
             "origen": self.origen,
             "destino": self.destino

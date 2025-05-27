@@ -38,8 +38,12 @@ class Vehiculo:
         self.costo_fijo = costo_fijo
         self.costo_km = costo_km
         self.costo_kg = costo_kg
-        
-    
+
+    @staticmethod 
+    def validarModo(modo):
+        lista_modos=['automotor','ferroviario','aereo','maritimo']
+        return modo in lista_modos
+
     def calcular_costo_total(self, distancia, peso):
         """
         Costo de usar este vehículo en un tramo, sin multiplicar por cantidad de vehículos.
