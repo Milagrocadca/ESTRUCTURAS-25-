@@ -8,7 +8,7 @@ class Nodo:
         
         self.nombre = nombre
         self.modos = set(modos)
-        self.conexiones = []
+        self.conexiones = [] 
 
     def agregar_conexion(self, conexion):
         self.conexiones.append(conexion)

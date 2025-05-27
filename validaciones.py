@@ -11,4 +11,3 @@ def validarTipo(tipo):
 
 def validarMetodo(metodo):
     return metodo.lower() in ["costo, tiempo"]
-        

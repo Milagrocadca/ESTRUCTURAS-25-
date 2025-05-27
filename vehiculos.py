@@ -1,5 +1,5 @@
-import math
 from validaciones import *
+
 class Vehiculo:
     def __init__(self, idVehiculo, tipo, modo, velocidad, capacidad, costo_fijo, costo_km, costo_kg):
         """

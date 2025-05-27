@@ -3,7 +3,7 @@ class Conexion:
         #id si o no
         self.tipo=tipo
         self.distancia=float(distancia)
-        self.origen=origen
+        self.origen=origen   #sacamos origen y lo relacionamos con nodoSIG
         self.destino=destino
         self.modo=modo.lower()
         self.vel_max = float(vel_max) if vel_max else None
