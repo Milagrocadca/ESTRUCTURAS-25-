@@ -1,78 +1,49 @@
 
 from collections import deque
+from math import ceil
 
-# Tarea como tupla: (id, descripcion, prioridad)
-# Lista de tareas (array)
-tareas = []
+class Planificador:
+    def __init__(self):
+        self.nodos = {}
 
-# Diccionario para acceder rápido por ID
-tareas_dict = {}
+    # tiene todas los y vehiculos
+    # me fijo si existe la conexion unica y sino intermediario
+    # llamar las def que creemos en nodo
 
-# Conjunto para evitar tareas duplicadas (por descripción)
-tareas_set = set()
+    def crearRutas(self, origen, destino, tipo):
+        pass  # TODO: implementar
 
-# Cola para tareas urgentes (FIFO)
-cola_urgentes = deque()
+    def buscar_rutas(self, solicitud):
+        pass  # TODO: implementar
 
-# Pila para historial de completadas (LIFO)
-historial_completadas = []
+def evaluar_ruta(ruta, vehiculo, peso, nodos):
+    tiempo_total = 0
+    costo_total = 0
+    for tramo in ruta:
+        if not (nodos[tramo.origen].tiene_modo(vehiculo.modo) and
+                nodos[tramo.destino].tiene_modo(vehiculo.modo)):
+            return None
 
-# --------------------- Funciones ---------------------
+        if not vehiculo.puede_recorrer(tramo, peso):
+            return None
 
-def agregar_tarea(id, descripcion, prioridad):
-    if descripcion in tareas_set:
-        raise ValueError ("La trea dse encuentra uplicada, no se puede agregar.")
-    
-    tarea = (id, descripcion, prioridad)
-    tareas.append(tarea)
-    tareas_dict[id] = tarea
-    tareas_set.add(descripcion)
-    
-    if prioridad == "alta":
-        cola_urgentes.append(tarea)
-    
-    print("Tarea agregada:", tarea)
+        # Velocidad efectiva
+        velocidad = tramo.vel_max if tramo.vel_max else vehiculo.velocidad
 
-def mostrar_tareas():
-    print("\n Tareas pendientes:")
-    for tarea in tareas:
-        print(f"- {tarea}")
-        
-    if cola_urgentes:
-        print("\n Tareas urgentes:")
-        for t in cola_urgentes:
-            print(f" {t}")
+        # Cantidad de vehículos necesarios
+        cantidad = ceil(peso / vehiculo.capacidad)
 
-def completar_tarea(id):
-    tarea = tareas_dict.pop(id, None)
-    if tarea:
-        tareas.remove(tarea)
-        tareas_set.remove(tarea[1])
-        if tarea in cola_urgentes:
-            cola_urgentes.remove(tarea)
-        historial_completadas.append(tarea)
-        print("Tarea completada:", tarea)
-    else:
-        print("No se encontró la tarea con ese ID")
+        # Calcular tiempo y costo
+        tiempo_tramo = tramo.distancia / velocidad
+        costo_tramo = vehiculo.calcular_costo_total(tramo.distancia, peso)
 
-def mostrar_historial():
-    print("\n Historial de tareas completadas:")
-    for tarea in reversed(historial_completadas):
-        print(f"- {tarea}")
+        tiempo_total += tiempo_tramo
+        costo_total += costo_tramo * cantidad
 
-# --------------------- Pruebas ---------------------
-
-agregar_tarea(1, "Enviar informe", "media")
-agregar_tarea(2, "Reunión con equipo", "alta")
-agregar_tarea(3, "Actualizar software", "baja")
-agregar_tarea(4, "Enviar informe", "alta")  # Duplicada
-
-mostrar_tareas()
-
-completar_tarea(2)
-mostrar_historial()
-mostrar_tareas()
-
-
-
-
+    return {
+        "ruta": ruta,
+        "vehiculo": vehiculo,
+        "modo": vehiculo.modo,
+        "tiempo_total": round(tiempo_total, 2),
+        "costo_total": round(costo_total, 2)
+    }

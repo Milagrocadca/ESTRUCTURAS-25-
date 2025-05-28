@@ -1,5 +1,5 @@
-import math
 from validaciones import *
+
 class Vehiculo:
     def __init__(self, idVehiculo, tipo, modo, velocidad, capacidad, costo_fijo, costo_km, costo_kg):
         """
@@ -11,7 +11,7 @@ class Vehiculo:
         :param costo_km: Costo por km recorrido ($)
         :param costo_kg: Costo por kg transportado ($)
         """
-        if not validarModo(modo):
+        if not Vehiculo.validarModo(modo):
             raise ValueError ("El modo del vehiculo ingresado no se encentra dentro de las opciones disponibles")
 
         elif not validarPositivo(velocidad):
@@ -38,8 +38,12 @@ class Vehiculo:
         self.costo_fijo = costo_fijo
         self.costo_km = costo_km
         self.costo_kg = costo_kg
-        
-    
+
+    @staticmethod 
+    def validarModo(modo):
+        lista_modos=('automotor','ferroviario','aereo','maritimo')
+        return modo in lista_modos
+
     def calcular_costo_total(self, distancia, peso):
         """
         Costo de usar este vehículo en un tramo, sin multiplicar por cantidad de vehículos.
@@ -56,6 +60,31 @@ class Vehiculo:
 
     def __repr__(self):
         return f"{self.tipo} ({self.modo})"
+
+
+    #RESTRICCIONES
+    def puede_recorrer(self, tramo, peso):
+        """
+        Verifica si el vehículo puede recorrer el tramo dado el peso:
+        - El modo debe coincidir
+        - El peso no debe superar el máximo permitido del tramo
+        - El calado del vehículo debe ser compatible (si aplica)
+        """
+        if tramo.modo != self.modo:
+            return False
+
+        if tramo.peso_max is not None and peso > tramo.peso_max:
+            return False
+
+        if tramo.vel_max is not None and self.velocidad > tramo.vel_max:
+            return False
+
+        if tramo.modo == "maritimo" and tramo.calado_max is not None:
+            if hasattr(self, "calado_necesario") and self.calado_necesario is not None:
+                if self.calado_necesario > tramo.calado_max:
+                    return False
+
+        return True
 
 
 class Automotor(Vehiculo):

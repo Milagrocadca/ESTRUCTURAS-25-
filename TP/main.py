@@ -48,3 +48,30 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
+
+#crear e importar nodos y conexiones
+# Crear los nodos
+nodos = {}
+for nombre in nodos_df["nombre"]:
+    nodos[nombre] = Nodo(nombre)
+
+# Crear y agregar las conexiones
+for _, row in conexiones_df.iterrows():
+    origen = nodos[row["origen"]]
+    destino = nodos[row["destino"]]
+    tipo = row["tipo"]
+    distancia = row["distancia_km"]
+    restriccion = row["restriccion"] if pd.notna(row["restriccion"]) else None
+    valor = row["valor_restriccion"] if pd.notna(row["valor_restriccion"]) else None
+
+    conexion = Conexion(origen, destino, tipo, distancia, restriccion, valor)
+    origen.agregar_conexion(conexion)
+
+    # Si la conexión es bidireccional (por defecto), agregar la inversa
+    conexion_inversa = Conexion(destino, origen, tipo, distancia, restriccion, valor)
+    destino.agregar_conexion(conexion_inversa)
+
+# Ejemplo: imprimir conexiones desde "Zarate"
+for conexion in nodos["Zarate"].conexiones:
+    print(conexion)
